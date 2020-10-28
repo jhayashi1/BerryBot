@@ -3,6 +3,7 @@ import random
 import storage
 from discord.ext import commands
 
+token = open("token.txt").read()
 intents = discord.Intents.all()
 intents.members = True
 intents.presences = True
@@ -26,70 +27,65 @@ def send_quote(ctx, title, quote, image):
 def predicate(event):
     return event.action is discord.AuditLogAction.member_move or event.action is discord.AuditLogAction.member_disconnect
 
+def validate_user(mem):
+    return storage.get_value(str(mem), 'sentry_enabled')
+
 
 @bot.event
 async def on_ready():
     print("bird up")
-    bot.ch = bot.get_channel(748586297328664638)
+    bot.ch = bot.get_channel(625905125864505364)
     bot.guild = bot.get_guild(177593112753995776)
     bot.last_event = await bot.guild.audit_logs().find(predicate)
 
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-    #TODO: Update function to kick user
     guild = member.guild
     event = await guild.audit_logs().find(predicate)
-    name = str(guild.get_member_named(str(event.user)))
-    check = storage.get_value(name, 'sentry_enabled')
+    name = guild.get_member_named(str(event.user))
+    check = storage.get_value(str(name), 'sentry_enabled')
 
     if event.user.name != member.name and event.id != bot.last_event.id and check and bot.sentry_on:
         print("Event: " + event.user.name)
         print("Member: " + member.name)
         bot.last_event = event
+        await name.move_to(channel=None)
+        await bot.ch.send(name.mention + " nice try idiot")
 
 
 @bot.command()
 async def refreshdb(ctx):
     members = ctx.guild.members
     for member in members:
-        if storage.checkInfo(member) == "Error":
-            storage.addEntry(str(member), member.id, member.guild.id)
+        if storage.check_info(member) == "Error":
+            storage.add_entry(str(member), member.id, member.guild.id)
 
     await ctx.send("Refreshed database!")
 
 
 @bot.command()
 async def get(ctx, *args):
-    try:
-        converter = commands.MemberConverter()
-        name = await converter.convert(ctx=ctx, argument=' '.join(args))
-        info = storage.checkInfo(str(name))
-        embed = discord.Embed(
-            title=str(name),
-            colour=discord.Colour.blue()
-        )
-        for key, value in info.items():
-            embed.add_field(name=key, value=value, inline=False)
-        await ctx.send(embed=embed)
-    except:
-        await ctx.send("Invalid User!")
+    if not validate_user(ctx.author):
+        try:
+            converter = commands.MemberConverter()
+            name = await converter.convert(ctx=ctx, argument=' '.join(args))
+            info = storage.check_info(str(name))
+            embed = discord.Embed(
+                title=str(name),
+                colour=discord.Colour.blue()
+            )
+            for key, value in info.items():
+                embed.add_field(name=key, value=value, inline=False)
+            await ctx.send(embed=embed)
+        except:
+            await ctx.send("Invalid User!")
+    else:
+        await ctx.send("You have insufficient permissions to access this command")
 
 @bot.command()
 async def hello(ctx):
     await ctx.send("yeet")
-
-
-@bot.command()
-async def mode(ctx, arg1):
-    if arg1 == 'i':
-        await bot.change_presence(status=discord.Status.idle)
-        await ctx.send("Changed to idle")
-    elif arg1 == 'o':
-        await bot.change_presence(status=discord.Status.online)
-        await ctx.send("Changed to online")
-    else:
-        await bot.ch.send("Incorrect argument")
 
 
 @bot.command()
@@ -144,24 +140,29 @@ async def quote(ctx, arg1):
 
 @bot.command()
 async def sentry(ctx):
-    if not bot.sentry_on:
-        await ctx.send("Sentry on...")
+    if not validate_user(ctx.author):
+        if not bot.sentry_on:
+            await ctx.send("Sentry on...")
+        else:
+            await ctx.send("Sentry off...")
+
+        bot.sentry_on = not bot.sentry_on
     else:
-        await ctx.send("Sentry off...")
-
-    bot.sentry_on = not bot.sentry_on
-
+        await ctx.send("You have insufficient permissions to access this command")
 
 @bot.command()
 async def watch(ctx, *args):
-    try:
-        converter = commands.MemberConverter()
-        target = await converter.convert(ctx=ctx, argument=' '.join(args))
-        print(str(target))
-        storage.toggle_info(str(target), 'sentry_enabled')
-        await ctx.send("Toggled sentry to " + str(storage.get_value(str(target), 'sentry_enabled')) + " for " + str(target))
-    except:
-        await ctx.send("Invalid User!")
+    if not validate_user(ctx.author):
+        try:
+            converter = commands.MemberConverter()
+            target = await converter.convert(ctx=ctx, argument=' '.join(args))
+            print(str(target))
+            storage.toggle_info(str(target), 'sentry_enabled')
+            await ctx.send("Toggled sentry to " + str(storage.get_value(str(target), 'sentry_enabled')) + " for " + str(target))
+        except:
+            await ctx.send("Invalid User!")
+    else:
+        await ctx.send("You have insufficient permissions to access this command")
 
 
 @bot.command()
@@ -182,4 +183,4 @@ async def disconnect(ctx):
 async def close(ctx):
     await bot.close()
 
-bot.run("NzQ4MzU0MTI3MzMxMDY1ODc4.X0cNFw.4onJ0TRFpNXauYU8EyCPDXzegBk")
+bot.run(token)
