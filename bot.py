@@ -182,4 +182,4 @@ async def disconnect(ctx):
 async def close(ctx):
     await bot.close()
 
-bot.run("NzQ4MzU0MTI3MzMxMDY1ODc4.X0cNFw.4onJ0TRFpNXauYU8EyCPDXzegBk")
+bot.run("")
