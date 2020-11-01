@@ -1,6 +1,7 @@
 import discord
 import random
 import storage
+import praw
 from discord.ext import commands
 
 token = open("token.txt").read()
@@ -27,6 +28,7 @@ def send_quote(ctx, title, quote, image):
 def predicate(event):
     return event.action is discord.AuditLogAction.member_move or event.action is discord.AuditLogAction.member_disconnect
 
+
 def validate_user(mem):
     return storage.get_value(str(mem), 'sentry_enabled')
 
@@ -38,6 +40,10 @@ async def on_ready():
     bot.guild = bot.get_guild(177593112753995776)
     bot.last_event = await bot.guild.audit_logs().find(predicate)
 
+    for guild in bot.guilds:
+        for member in guild.members:
+            if storage.check_info(member) == "Error":
+                storage.add_entry(str(member), member.id, member.guild.id)
 
 @bot.event
 async def on_voice_state_update(member, before, after):
@@ -163,6 +169,38 @@ async def watch(ctx, *args):
             await ctx.send("Invalid User!")
     else:
         await ctx.send("You have insufficient permissions to access this command")
+
+
+@bot.command()
+async def reddit(ctx, arg1):
+    try:
+        r = praw.Reddit(client_id='',
+                        client_secret='',
+                        user_agent='')
+
+        user = r.redditor(arg1)
+        submissions = list(user.submissions.new())
+        submission = random.choice(submissions)
+        url = submission.url
+
+        embed = discord.Embed(
+            title=str(submission.title + " from r/" + str(submission.subreddit)),
+            colour=discord.Colour.blue(),
+            description="`" + url + "`"
+        )
+        if submission.is_self or "youtube.com" in submission.selftext :
+            embed.add_field(name="**Submission Text:**", value=submission.selftext, inline=False)
+        else:
+            embed.set_image(url=url)
+
+        embed.set_author(name='u/' + user.name,
+                         icon_url=user.icon_img)
+        embed.set_footer(text=submission.permalink)
+
+        await ctx.send(embed=embed)
+    except Exception as e:
+        await ctx.send("Error! Invalid user")
+        print(e)
 
 
 @bot.command()
