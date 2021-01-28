@@ -1,0 +1,25 @@
+from discord.ext import commands
+
+class AdminCog(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.command()
+    async def connect(self, ctx):
+        try:
+            channel = ctx.author.voice.channel
+            await channel.connect()
+        except:
+            await ctx.send("You're not connected to a channel!")
+
+    @commands.command()
+    async def disconnect(self, ctx):
+        await ctx.voice_client.disconnect()
+
+
+    @commands.command()
+    async def close(self, ctx):
+        await self.bot.close()
+
+def setup(bot):
+    bot.add_cog(AdminCog(bot))
