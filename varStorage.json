@@ -803,5 +803,25 @@
         "memberID": 416358583220043796,
         "guildID": 177593112753995776,
         "sentry_enabled": false
+    },
+    "cheppy44#7566": {
+        "memberID": 211298225699684353,
+        "guildID": 177593112753995776,
+        "sentry_enabled": false
+    },
+    "Grandpa#6294": {
+        "memberID": 154374961295785985,
+        "guildID": 177593112753995776,
+        "sentry_enabled": false
+    },
+    "PackLeaderSage#0836": {
+        "memberID": 104288010639515648,
+        "guildID": 177593112753995776,
+        "sentry_enabled": false
+    },
+    "Mortifer#0843": {
+        "memberID": 190161842675515392,
+        "guildID": 177593112753995776,
+        "sentry_enabled": false
     }
 }
