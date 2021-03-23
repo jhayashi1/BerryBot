@@ -1,6 +1,4 @@
-from discord import AuditLogAction
 from discord.ext import commands
-from datetime import datetime, timedelta
 
 class SentryCog(commands.Cog):
     def __init__(self, bot):
