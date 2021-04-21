@@ -61,11 +61,12 @@ class AdminCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        emojis = ['amogus', 'yayou', 'league']
+        if self.chat_react:
+            emojis = ['amogus', 'yayou', 'league']
 
-        for emoji in message.guild.emojis:
-            if emoji.name in emojis:
-                await message.add_reaction(emoji=emoji)
+            for emoji in message.guild.emojis:
+                if emoji.name in emojis:
+                    await message.add_reaction(emoji=emoji)
 
 
 
