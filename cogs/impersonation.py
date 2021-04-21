@@ -5,55 +5,79 @@ import random
 import discord
 import requests
 import shutil
+import datetime
 
 class ImpersonationCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @tasks.loop(minutes=random.randint(30, 45))
+    @tasks.loop(minutes=random.randint(20, 30))
     async def monitor(self):
+        time = datetime.datetime.now().strftime("%H:%M:%S")
+        print(time, "Checking for potential targets")
+
         guilds = self.bot.guilds
-        for guild in guilds:
-            channels = guild.voice_channels
-            users = []
-            target_channel = None
+        guild = None
+        for g in guilds:
+            if g.id == 177593112753995776:
+                guild = g
 
-            #Get channel with most people in it
-            for channel in channels:
-                if channel.members:
-                    temp = []
-                    for key in channel.members:
-                        temp.append(key)
+        channels = guild.voice_channels
+        users = []
+        target_channel = None
 
-                        if len(temp) > len(users):
-                            users = temp
-                            target_channel = channel
+        #Get channel with most people in it
+        for channel in channels:
+            if channel.members:
+                temp = []
+                for key in channel.members:
+                    temp.append(key)
 
-            lines = open("./tools/people.txt").read().splitlines()
-            target_member = None
+                    if len(temp) > len(users):
+                        users = temp
+                        target_channel = channel
 
-            while target_member is None:
-                temp = random.choice(lines).split('#')
-                temp_member = get(self.bot.get_all_members(), name=temp[0], discriminator=temp[1])
-                #print("checking " + temp[0])
-                if temp_member not in users and temp_member.status == discord.Status.online:
-                    target_member = temp_member
+        if target_channel is None:
+            time = datetime.datetime.now().strftime("%H:%M:%S")
+            print(time, "No targets found in", guild.name)
 
-            info = self.get_info(target_member)
 
-            await self.bot.user.edit(avatar=info[0])
-            await guild.get_member(self.bot.user.id).edit(nick=info[1])
+        lines = open("./tools/people.txt").read().splitlines()
+        target_member = None
+        index = 0
 
-            vc = await target_channel.connect()
-            sleep(random.randint(5, 10) * 60)
-            await vc.disconnect()
+        while target_member is None:
+            temp = random.choice(lines).split('#')
+            temp_member = get(self.bot.get_all_members(), name=temp[0], discriminator=temp[1])
+            #print("checking " + temp[0])
+            if temp_member not in users and temp_member.status == discord.Status.online:
+                target_member = temp_member
 
-                    #vc = get(self.bot.voice_clients)
+            if temp_member not in users and index > 100:
+                target_member = temp_member
+            index += 1
+
+        info = self.get_info(target_member)
+
+        await self.bot.user.edit(avatar=info[0])
+        await guild.get_member(self.bot.user.id).edit(nick=info[1])
+
+        vc = await target_channel.connect()
+        disconnect = random.randint(5, 10) * 60
+        time = datetime.datetime.now().strftime("%H:%M:%S")
+        print(time, "Connected to", target_channel, "as", target_member.name, "- waiting", int(disconnect / 60),
+              "minutes before disconnecting")
 
         # if vc is not None:
         #     vc.play(discord.FFmpegPCMAudio(executable="./ffmpeg/bin/ffmpeg.exe", source="./tools/audio/audio.wav"))
         #     while vc.is_playing():
         #         sleep(1)
+
+        sleep(disconnect)
+
+        await vc.disconnect()
+        time = datetime.datetime.now().strftime("%H:%M:%S")
+        print(time, "Disconnected from", target_channel, "after", int(disconnect / 60), "minutes")
 
     @commands.command()
     async def impersonate(self, ctx, *args):
