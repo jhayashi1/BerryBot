@@ -4,6 +4,7 @@ class AdminCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.voice_check = True
+        self.chat_react = False
 
     @commands.command()
     async def connect(self, ctx):
@@ -31,6 +32,13 @@ class AdminCog(commands.Cog):
     @commands.command()
     async def close(self, ctx):
         await self.bot.close()
+
+    @commands.command()
+    async def react(self, ctx):
+        if self.chat_react:
+            self.chat_react = False
+        else:
+            self.chat_react = True
 
     @commands.Cog.listener()
     async def on_message(self, message):
