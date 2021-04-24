@@ -75,3 +75,11 @@ def add_entry(name, id, guild):
     }
     save_to_json(replist)
     return "done"
+
+def save_time(path, dict):
+    with open(path, 'w') as json_file:
+        json.dump(dict, json_file, indent=4)
+
+
+def where_json(file_name):
+    return os.path.exists(file_name)
