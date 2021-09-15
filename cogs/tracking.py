@@ -8,10 +8,28 @@ class TrackingCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.storage = {}
+        self.enabled = False
+    
+    commands.command()
+    async def track(self, ctx, arg1):
+        if arg1 == "enable":
+            if self.enabled:
+                await ctx.send("Tracking is already enabled")
+            else:
+                self.enabled = True
+                await ctx.send("Tracking enabled")
+        elif arg1 == "disable":
+            if not self.enabled:
+                await ctx.send("Tracking is already disabled")
+            else:
+                self.enabled = False
+                await ctx.send("Tracking disabled")
+        else:
+            await ctx.send("tracking [enable | disable]")
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        if member.id == self.bot.user.id:
+        if member.id == self.bot.user.id or not self.enabled:
             return None
 
         name = member.name + "#" + member.discriminator

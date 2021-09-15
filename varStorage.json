@@ -1013,5 +1013,95 @@
         "memberID": 355165729554694144,
         "guildID": 225424272825384960,
         "sentry_enabled": false
+    },
+    "TheMediaMan#7017": {
+        "memberID": 311279477319663616,
+        "guildID": 177593112753995776,
+        "sentry_enabled": false
+    },
+    "SHU#6112": {
+        "memberID": 192375415606607873,
+        "guildID": 177593112753995776,
+        "sentry_enabled": false
+    },
+    "Song#0808": {
+        "memberID": 215913543621541889,
+        "guildID": 177593112753995776,
+        "sentry_enabled": false
+    },
+    "Spike#6851": {
+        "memberID": 304458408642347009,
+        "guildID": 177593112753995776,
+        "sentry_enabled": false
+    },
+    "ratboy#2906": {
+        "memberID": 117825739910414337,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "GumbyLord#5776": {
+        "memberID": 235953566680875008,
+        "guildID": 177593112753995776,
+        "sentry_enabled": false
+    },
+    "GenAi#1446": {
+        "memberID": 656962312565030963,
+        "guildID": 177593112753995776,
+        "sentry_enabled": false
+    },
+    "scribe#3005": {
+        "memberID": 116668711414398978,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "M o r t i \u0192 e r#0843": {
+        "memberID": 190161842675515392,
+        "guildID": 177593112753995776,
+        "sentry_enabled": false
+    },
+    "ThatOneHalfAsian#9333": {
+        "memberID": 127643942740033536,
+        "guildID": 177593112753995776,
+        "sentry_enabled": false
+    },
+    "Hunt Poon#9844": {
+        "memberID": 473669973768798209,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "JamesonBuckaroo#9590": {
+        "memberID": 148249332930445312,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "RandomTeamGenerator#0115": {
+        "memberID": 693300079838101504,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "theloniousdump#3696": {
+        "memberID": 305784182460907520,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "poorme#1495": {
+        "memberID": 224682623379701771,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "chloe.rosie#3968": {
+        "memberID": 692217759102271580,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "Banana#7021": {
+        "memberID": 114223445008449544,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "ShallowVainMaterialist#0787": {
+        "memberID": 190456428232704000,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
     }
 }
