@@ -16,14 +16,9 @@ class TriggersCog(commands.Cog):
         check = error_check(args)
         
         if (check == 0):
-            error = add_trigger(ctx, args[1], args[2])
-
-            if not error:
-                await ctx.send("Successfully added " + args[1] + " " + args[2])
-            else:
-                await ctx.send(error)
+            await ctx.send(add_trigger(ctx, args[1], args[2]))
         elif (check == 1):
-            await ctx.send("Successfully removed " + args[1])
+            await ctx.send(remove_trigger(ctx, args[1]))
         elif (check == 2):
             await ctx.send("TODO: display list")
         else:
@@ -59,12 +54,13 @@ def add_trigger(ctx, trigger, response):
     try:
         with open(path + filename, 'r') as json_file:
             replist = json.load(json_file)
-            if replist[trigger]:
-                return "Trigger '" + trigger + "' already exists!"
-
-            replist[trigger] = {
-                "response": response
-            }
+            try:
+                if replist[trigger]:
+                    return "Trigger '" + trigger + "' already exists!"
+            except KeyError:
+                replist[trigger] = {
+                    "response": response
+                }
     except FileNotFoundError:
         if not os.path.exists(path):
             os.makedirs(path)
@@ -75,6 +71,23 @@ def add_trigger(ctx, trigger, response):
             }
 
     storage.save_json(path + filename, replist)
+    return "Successfully added trigger '" + trigger + "'"
+
+def remove_trigger(ctx, trigger):
+    path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/triggers/"
+    filename = "triggers.json"
+
+    try:
+        with open(path + filename, 'r') as json_file:
+            replist = json.load(json_file)
+            print(replist)
+            if replist[trigger]:
+                del replist[trigger]
+    except FileNotFoundError:
+        return "Invalid trigger!"
+    
+    storage.save_json(path + filename, replist)
+    return "Removed '" + trigger + "' from trigger list"
 
 def search_triggers(message):
     path = "./tools/" + message.guild.name + " (" + str(message.guild.id) + ")/triggers/"
