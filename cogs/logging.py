@@ -34,7 +34,7 @@ class LoggingCog(commands.Cog):
             return None
 
         name = member.name + "#" + member.discriminator
-        path = "./tools/logging/" + member.guild.name + "/voice chat/"
+        path = "./tools/" + member.guild.name + " (" + str(member.guild.id) + ")/voice chat/"
         filename = name + ".json"
         now = datetime.now()
 
@@ -74,7 +74,7 @@ class LoggingCog(commands.Cog):
 def log_message(message):
     sender = message.author
     name = sender.name + "#" + sender.discriminator
-    path = "./tools/logging/" + sender.guild.name + "/text chat/"
+    path = "./tools/" + sender.guild.name + " (" + str(sender.guild.id) + ")/text chat/"
     filename = name + ".json"
     now = datetime.now()
 

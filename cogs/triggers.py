@@ -27,7 +27,7 @@ class TriggersCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.id == self.bot.user.id:
+        if message.author.id == self.bot.user.id or message.content[0] == ',':
             return None
 
         response = search_triggers(message)
@@ -49,7 +49,7 @@ def error_check(args):
     return -1
 
 def add_trigger(ctx, trigger, response):
-    path = "./tools/triggers/" + message.guild.name + " | " + message.guild.id + "/"
+    path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/triggers/"
     filename = "triggers.json"
 
     #TODO manage duplicate entries
@@ -71,7 +71,7 @@ def add_trigger(ctx, trigger, response):
     storage.save_json(path + filename, replist)
 
 def search_triggers(message):
-    path = "./tools/triggers/" + message.guild.name + " | " + message.guild.id + "/"
+    path = "./tools/" + message.guild.name + " (" + str(message.guild.id) + ")/triggers/"
     filename = "triggers.json"
 
     try:
@@ -88,6 +88,7 @@ def search_triggers(message):
 
             return response
     except FileNotFoundError:
+        print("FileNotFoundError")
         return None
 
 def setup(bot):
