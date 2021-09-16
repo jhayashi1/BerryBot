@@ -4,3 +4,4 @@ __pycache__
 tools/
 token.txt
 varStorage.json
+cogs/__pycache__/

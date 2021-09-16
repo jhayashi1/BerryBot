@@ -70,7 +70,6 @@ class LoggingCog(commands.Cog):
 
         log_message(message)
 
-#TODO Change path to sort by guilds instead of the functionality
 def log_message(message):
     sender = message.author
     name = sender.name + "#" + sender.discriminator

@@ -16,8 +16,12 @@ class TriggersCog(commands.Cog):
         check = error_check(args)
         
         if (check == 0):
-            add_trigger(ctx, args[1], args[2])
-            await ctx.send("Successfully added " + args[1] + " " + args[2])
+            error = add_trigger(ctx, args[1], args[2])
+
+            if not error:
+                await ctx.send("Successfully added " + args[1] + " " + args[2])
+            else:
+                await ctx.send(error)
         elif (check == 1):
             await ctx.send("Successfully removed " + args[1])
         elif (check == 2):
@@ -52,10 +56,12 @@ def add_trigger(ctx, trigger, response):
     path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/triggers/"
     filename = "triggers.json"
 
-    #TODO manage duplicate entries
     try:
         with open(path + filename, 'r') as json_file:
             replist = json.load(json_file)
+            if replist[trigger]:
+                return "Trigger '" + trigger + "' already exists!"
+
             replist[trigger] = {
                 "response": response
             }
