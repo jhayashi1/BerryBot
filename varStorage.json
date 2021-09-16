@@ -31,12 +31,12 @@
     },
     "Pizza.RAR#2348": {
         "memberID": 198297488786980865,
-        "guildID": 225424272825384960,
+        "guildID": 669712877447413760,
         "sentry_enabled": false
     },
     "Jared#6850": {
         "memberID": 187718185779200000,
-        "guildID": 225424272825384960,
+        "guildID": 669712877447413760,
         "sentry_enabled": false
     },
     "scribe#9219": {
@@ -91,7 +91,7 @@
     },
     "BerryBot#3770": {
         "memberID": 748354127331065878,
-        "guildID": 225424272825384960,
+        "guildID": 669712877447413760,
         "sentry_enabled": false
     },
     "skullcandy#6112": {
@@ -266,7 +266,7 @@
     },
     "Vishnu#9123": {
         "memberID": 177592593952014336,
-        "guildID": 225424272825384960,
+        "guildID": 669712877447413760,
         "sentry_enabled": false
     },
     "Justin#9696": {
@@ -1102,6 +1102,21 @@
     "ShallowVainMaterialist#0787": {
         "memberID": 190456428232704000,
         "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "theloniousdump#8540": {
+        "memberID": 305784182460907520,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "Jockie Music (2)#8488": {
+        "memberID": 412347553141751808,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "RobBot#3111": {
+        "memberID": 669712296104427530,
+        "guildID": 669712877447413760,
         "sentry_enabled": false
     }
 }

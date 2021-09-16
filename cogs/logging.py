@@ -61,7 +61,7 @@ class LoggingCog(commands.Cog):
                 replist = {}
                 replist[0] = self.storage[name]
 
-            storage.save_time(path + filename, replist)
+            storage.save_json(path + filename, replist)
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -70,6 +70,7 @@ class LoggingCog(commands.Cog):
 
         log_message(message)
 
+#TODO Change path to sort by guilds instead of the functionality
 def log_message(message):
     sender = message.author
     name = sender.name + "#" + sender.discriminator
@@ -98,7 +99,7 @@ def log_message(message):
                 "message": message.content
             }
 
-    storage.save_time(path + filename, replist)
+    storage.save_Json(path + filename, replist)
 
 def setup(bot):
     bot.add_cog(LoggingCog(bot))

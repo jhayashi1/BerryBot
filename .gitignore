@@ -1,5 +1,5 @@
 .vs
 .idea
 __pycache__
-tools/tracking/
+tools/
 token.txt
