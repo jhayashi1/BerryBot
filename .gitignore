@@ -1,5 +1,6 @@
-.vs
-.idea
-__pycache__
-tools/tracking/
+.vs/
+.idea/
+__pycache__/
+tools/
 token.txt
+ffmpeg/
