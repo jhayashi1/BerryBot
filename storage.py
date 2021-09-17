@@ -76,7 +76,7 @@ def add_entry(name, id, guild):
     save_to_json(replist)
     return "done"
 
-def save_time(path, dict):
+def save_json(path, dict):
     with open(path, 'w') as json_file:
         json.dump(dict, json_file, indent=4)
 

@@ -4,28 +4,29 @@ import json
 import os
 import storage
 
-class TrackingCog(commands.Cog):
+class LoggingCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.storage = {}
         self.enabled = False
     
-    commands.command()
-    async def track(self, ctx, arg1):
+    @commands.command()
+    async def logging(self, ctx, arg1):
         if arg1 == "enable":
             if self.enabled:
-                await ctx.send("Tracking is already enabled")
+                await ctx.send("Logging is already enabled")
             else:
                 self.enabled = True
-                await ctx.send("Tracking enabled")
+                await ctx.send("Logging enabled")
         elif arg1 == "disable":
             if not self.enabled:
-                await ctx.send("Tracking is already disabled")
+                await ctx.send("Logging is already disabled")
             else:
                 self.enabled = False
-                await ctx.send("Tracking disabled")
+                log_message(ctx.message)
+                await ctx.send("Logging disabled")
         else:
-            await ctx.send("tracking [enable | disable]")
+            await ctx.send("logging [enable | disable]")
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
@@ -33,7 +34,7 @@ class TrackingCog(commands.Cog):
             return None
 
         name = member.name + "#" + member.discriminator
-        path = "./tools/tracking/" + member.guild.name + "/voice chat/"
+        path = "./tools/" + member.guild.name + " (" + str(member.guild.id) + ")/voice chat/"
         filename = name + ".json"
         now = datetime.now()
 
@@ -60,41 +61,44 @@ class TrackingCog(commands.Cog):
                 replist = {}
                 replist[0] = self.storage[name]
 
-            storage.save_time(path + filename, replist)
+            storage.save_json(path + filename, replist)
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.id == self.bot.user.id:
+        if message.author.id == self.bot.user.id or not self.enabled:
             return None
 
-        sender = message.author
-        name = sender.name + "#" + sender.discriminator
-        path = "./tools/tracking/" + sender.guild.name + "/text chat/"
-        filename = name + ".json"
-        now = datetime.now()
+        log_message(message)
 
-        try:
-            with open(path + filename, 'r') as json_file:
-                replist = json.load(json_file)
-                replist[len(replist)] = {
-                    "date": now.strftime("%m/%d/%y"),
-                    "time": now.strftime("%H:%M:%S"),
-                    "channel": message.channel.name,
-                    "message": message.content
-                }
-        except FileNotFoundError:
-            if not os.path.exists(path):
-                os.makedirs(path)
+def log_message(message):
+    sender = message.author
+    name = sender.name + "#" + sender.discriminator
+    path = "./tools/" + sender.guild.name + " (" + str(sender.guild.id) + ")/text chat/"
+    filename = name + ".json"
+    now = datetime.now()
 
-            replist = {}
-            replist[0] = {
-                    "date": now.strftime("%m/%d/%y"),
-                    "time": now.strftime("%H:%M:%S"),
-                    "channel": message.channel.name,
-                    "message": message.content
-                }
+    try:
+        with open(path + filename, 'r') as json_file:
+            replist = json.load(json_file)
+            replist[len(replist)] = {
+                "date": now.strftime("%m/%d/%y"),
+                "time": now.strftime("%H:%M:%S"),
+                "channel": message.channel.name,
+                "message": message.content
+            }
+    except FileNotFoundError:
+        if not os.path.exists(path):
+            os.makedirs(path)
 
-        storage.save_time(path + filename, replist)
+        replist = {}
+        replist[0] = {
+                "date": now.strftime("%m/%d/%y"),
+                "time": now.strftime("%H:%M:%S"),
+                "channel": message.channel.name,
+                "message": message.content
+            }
+
+    storage.save_Json(path + filename, replist)
 
 def setup(bot):
-    bot.add_cog(TrackingCog(bot))
+    bot.add_cog(LoggingCog(bot))
