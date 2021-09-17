@@ -6,6 +6,7 @@ import os
 
 ERROR_MESSAGE = "Usage: trigger [add|remove|list] [trigger] [response]"
 
+
 class TriggersCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -14,19 +15,20 @@ class TriggersCog(commands.Cog):
     async def trigger(self, ctx, *args):
 
         check = error_check(args)
-        
+        await ctx.message.delete()
+
         if (check == 0):
             await ctx.send(add_trigger(ctx, args[1], args[2]))
         elif (check == 1):
             await ctx.send(remove_trigger(ctx, args[1]))
         elif (check == 2):
-            await ctx.send("TODO: display list")
+            await ctx.send(embed=list_triggers(ctx))
         else:
             await ctx.send(ERROR_MESSAGE)
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.id == self.bot.user.id or message.content[0] == ',':
+        if message.author.id == self.bot.user.id:
             return None
 
         response = search_triggers(message)
@@ -46,6 +48,7 @@ def error_check(args):
         return 2
 
     return -1
+
 
 def add_trigger(ctx, trigger, response):
     path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/triggers/"
@@ -67,11 +70,12 @@ def add_trigger(ctx, trigger, response):
 
         replist = {}
         replist[trigger] = {
-                "response": response
-            }
+            "response": response
+        }
 
     storage.save_json(path + filename, replist)
     return "Successfully added trigger '" + trigger + "'"
+
 
 def remove_trigger(ctx, trigger):
     path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/triggers/"
@@ -80,14 +84,38 @@ def remove_trigger(ctx, trigger):
     try:
         with open(path + filename, 'r') as json_file:
             replist = json.load(json_file)
-            print(replist)
             if replist[trigger]:
                 del replist[trigger]
     except FileNotFoundError:
-        return "Invalid trigger!"
-    
+        return "Cannot remove trigger '" + trigger + "'!"
+    except KeyError:
+        return "Cannot remove trigger '" + trigger + "'!"
+
     storage.save_json(path + filename, replist)
     return "Removed '" + trigger + "' from trigger list"
+
+
+def list_triggers(ctx):
+    path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/triggers/"
+    filename = "triggers.json"
+    triggers_embed = discord.Embed(
+        title="BerryBot Triggers", color=discord.Color.orange())
+
+    try:
+        with open(path + filename, 'r') as json_file:
+            replist = json.load(json_file)
+            for key in replist.keys():
+                response = replist[key]["response"]
+                triggers_embed.add_field(
+                    name=key,
+                    value=response,
+                    inline=False
+                )
+
+        return triggers_embed
+    except FileNotFoundError:
+        return "No triggers found!"
+
 
 def search_triggers(message):
     path = "./tools/" + message.guild.name + " (" + str(message.guild.id) + ")/triggers/"
@@ -107,8 +135,8 @@ def search_triggers(message):
 
             return response
     except FileNotFoundError:
-        print("FileNotFoundError")
         return None
+
 
 def setup(bot):
     bot.add_cog(TriggersCog(bot))
