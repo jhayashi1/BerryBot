@@ -1038,5 +1038,10 @@
         "memberID": 669712296104427530,
         "guildID": 669712877447413760,
         "sentry_enabled": false
+    },
+    "MajorVaccinatedRegret#0787": {
+        "memberID": 190456428232704000,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
     }
 }

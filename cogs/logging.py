@@ -98,7 +98,7 @@ def log_message(message):
                 "message": message.content
             }
 
-    storage.save_Json(path + filename, replist)
+    storage.save_json(path + filename, replist)
 
 def setup(bot):
     bot.add_cog(LoggingCog(bot))

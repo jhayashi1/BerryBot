@@ -4,7 +4,7 @@ import storage
 import json
 import os
 
-ERROR_MESSAGE = "Usage: trigger [add|remove|list] [trigger] [response]"
+ERROR_MESSAGE = "Usage: ,trigger [add|remove|list] [\"trigger\"] [\"response\"]"
 
 
 class TriggersCog(commands.Cog):
@@ -15,7 +15,6 @@ class TriggersCog(commands.Cog):
     async def trigger(self, ctx, *args):
 
         check = error_check(args)
-        await ctx.message.delete()
 
         if (check == 0):
             await ctx.send(add_trigger(ctx, args[1], args[2]))
@@ -25,6 +24,8 @@ class TriggersCog(commands.Cog):
             await ctx.send(embed=list_triggers(ctx))
         else:
             await ctx.send(ERROR_MESSAGE)
+            return None
+        await ctx.message.delete()
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -38,6 +39,8 @@ class TriggersCog(commands.Cog):
 
 
 def error_check(args):
+    if not args:
+        return -1
     if args[0] == "add":
         if len(args) == 3:
             return 0
@@ -136,7 +139,6 @@ def search_triggers(message):
             return response
     except FileNotFoundError:
         return None
-
 
 def setup(bot):
     bot.add_cog(TriggersCog(bot))
