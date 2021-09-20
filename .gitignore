@@ -1,6 +1,6 @@
 .vs
 .idea
-__pycache__
+__pycache__/
 tools/
 token.txt
 varStorage.json

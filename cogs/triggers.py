@@ -107,7 +107,6 @@ def search_triggers(message):
 
             return response
     except FileNotFoundError:
-        print("FileNotFoundError")
         return None
 
 def setup(bot):
