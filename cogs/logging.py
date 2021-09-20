@@ -8,7 +8,7 @@ class LoggingCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.storage = {}
-        self.enabled = False
+        self.enabled = True
     
     @commands.command()
     async def logging(self, ctx, arg1):
@@ -48,7 +48,6 @@ class LoggingCog(commands.Cog):
         elif after.channel is None and self.storage[name]:
             self.storage[name]["after_time"] = now.strftime("%H:%M:%S")
 
-            #TODO fix this shit
             self.storage[name]["duration"] = str(datetime.strptime(self.storage[name]["after_time"], "%H:%M:%S") - datetime.strptime(self.storage[name]["before_time"], "%H:%M:%S"))
 
             try:
