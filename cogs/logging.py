@@ -42,10 +42,14 @@ class LoggingCog(commands.Cog):
             self.storage[name] = {
                 "date": now.strftime("%m/%d/%y"),
                 "before_time": now.strftime("%H:%M:%S"),
-                "after_time": 0
+                "after_time": 0,
+                "duration": 0
             }
-        elif after.channel is None and self.storage[name] is not None:
+        elif after.channel is None and self.storage[name]:
             self.storage[name]["after_time"] = now.strftime("%H:%M:%S")
+
+            #TODO fix this shit
+            self.storage[name]["duration"] = str(datetime.strptime(self.storage[name]["after_time"], "%H:%M:%S") - datetime.strptime(self.storage[name]["before_time"], "%H:%M:%S"))
 
             try:
                 print("Opening json for " + name)
@@ -62,6 +66,8 @@ class LoggingCog(commands.Cog):
                 replist[0] = self.storage[name]
 
             storage.save_json(path + filename, replist)
+            self.storage[name].clear()
+            print(self.storage)
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -98,7 +104,7 @@ def log_message(message):
                 "message": message.content
             }
 
-    storage.save_Json(path + filename, replist)
+    storage.save_json(path + filename, replist)
 
 def setup(bot):
     bot.add_cog(LoggingCog(bot))

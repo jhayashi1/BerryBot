@@ -1,7 +1,9 @@
-.vs
-.idea
+.vs/
+.idea/
 __pycache__/
 tools/
 token.txt
+ffmpeg/
+tools/
 varStorage.json
 cogs/__pycache__/

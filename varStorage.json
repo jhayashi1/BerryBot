@@ -1038,5 +1038,20 @@
         "memberID": 669712296104427530,
         "guildID": 669712877447413760,
         "sentry_enabled": false
+    },
+    "MajorVaccinatedRegret#0787": {
+        "memberID": 190456428232704000,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "MrFinks#0807": {
+        "memberID": 244910082301624321,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
+    },
+    "BruceNitro#0787": {
+        "memberID": 190456428232704000,
+        "guildID": 225424272825384960,
+        "sentry_enabled": false
     }
 }
