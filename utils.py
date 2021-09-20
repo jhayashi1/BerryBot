@@ -1,0 +1,2 @@
+#isowner
+#send embed

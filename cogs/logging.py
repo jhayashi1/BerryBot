@@ -10,7 +10,7 @@ class LoggingCog(commands.Cog):
         self.storage = {}
         self.enabled = True
     
-    @commands.command()
+    @commands.command(brief='Command to enable/disable voice and chat logging')
     async def logging(self, ctx, arg1):
         if arg1 == "enable":
             if self.enabled:

@@ -6,7 +6,7 @@ class AdminCog(commands.Cog):
         self.voice_check = True
         self.chat_react = False
 
-    @commands.command()
+    @commands.command(brief='connect to sender\'s voice channel')
     async def connect(self, ctx):
         try:
             channel = ctx.author.voice.channel
@@ -14,7 +14,7 @@ class AdminCog(commands.Cog):
         except:
             await ctx.send("You're not connected to a channel!")
 
-    @commands.command()
+    @commands.command(brief='connect to desired user\'s voice channel')
     async def join(self, ctx, *args):
         try:
             converter = commands.MemberConverter()
@@ -24,7 +24,7 @@ class AdminCog(commands.Cog):
             await ctx.send("User not in voice channel or invalid user")
 
 
-    @commands.command()
+    @commands.command(brief='disconnect from voice channel')
     async def disconnect(self, ctx):
         await ctx.voice_client.disconnect()
         self.voice_check = False
