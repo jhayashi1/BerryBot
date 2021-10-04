@@ -1,5 +1,5 @@
 from discord.ext import commands
-from utils import getUserByName
+from utils import getUserByNameOrID
 import discord
 
 class MotdCog(commands.Cog):
@@ -11,18 +11,21 @@ class MotdCog(commands.Cog):
 
         if (args[0].lower == "channel"):
             #TODO Error check this and remove first argument
+            del args[0]
             setMotdChannel(args)
 
-        target = await getUserByName(ctx, args)
+        target = await getUserByNameOrID(ctx, args)
 
-        if target is not -1:
+        if target is not None:
             response = "User " + target.name +" added to subscription list"
         else:
             try:
                 target = discord.utils.get(discord.guild.roles, name=args)
                 response = "Role " + target.name + " added to subscription list"
-            except:
+            except Exception as e:
+                print(e)
                 response = "No user or role found!"
+        await ctx.send(response)
 
 
 def addSubscriber(target):
