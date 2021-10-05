@@ -24,3 +24,18 @@ async def getUserByNameOrID(ctx, target):
     except:
         member = None
     return member
+
+async def getChannelByNameOrID(ctx, target):
+
+    #Attempt to search by id
+    channel = ctx.bot.get_channel(target)
+    if channel is not None:
+        return channel
+    
+    #Attempt to search by name
+    name = ''.join(target)
+    print(target)
+
+    channel = get(ctx.bot.get_all_channels(), name=name)
+
+    return channel
