@@ -7,20 +7,20 @@ from configparser import ConfigParser
 class MotdCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+    
+    @commands.command(brief='Set motd channel')
+    async def motd(self, ctx, arg1):
+        channel = utils.getChannelByNameOrID(ctx, arg1)
+
+        if channel is not None:
+            response = setMotdChannel(ctx, channel)
+        else:
+            response = "Error setting MOTD channel"
+        
+        utils.sendResponse(ctx, response)
 
     @commands.command(brief='Add role or user to subscription list')
     async def subscribe(self, ctx, *args):
-
-        if (args[0].lower == "channel"):
-            #TODO Error check this and remove first argument
-            del args[0]
-            channel = utils.getChannelByNameOrID(ctx, args)
-
-            if channel is not None:
-                response = setMotdChannel(ctx, args)
-            else:
-                response = "Error setting MOTD channel"
-
         target = await utils.getUserByNameOrID(ctx, args)
 
         if target is not None:
@@ -29,12 +29,12 @@ class MotdCog(commands.Cog):
             try:
                 #TODO Make it able to add roles to motd
                 #target = discord.utils.get(ctx.guild.roles, name=' '.join(args))
-                response = "Role " + target.name + " added to subscription list"
+                response = "Role added to subscription list"
             except Exception as e:
                 print(e)
                 response = "No user or role found!"
-        await ctx.send(response)
-        await ctx.message.delete()
+
+        utils.sendResponse(ctx, response)   
 
     @commands.command(brief='Add role or user to subscription list')
     async def say(self, ctx, args):
@@ -66,14 +66,20 @@ def listSubscribers():
     #TODO list subscribers for channel
 
 def setMotdChannel(ctx, channel):
-    path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/config.ini"
+    path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/"
+    file = "config.ini"
+
+    if not utils.checkPath(path):
+        utils.addConfig(path)
 
     #TODO test this
     if not os.path.exists(path):
-        os.mknod(path)
+        os.mkdir(path)
+        with open(path + file, 'w') as config:
+            pass
 
     configur = ConfigParser()
-    configur.read(path)
+    configur.read(path + file)
 
 
     #TODO set channel and save to ini file

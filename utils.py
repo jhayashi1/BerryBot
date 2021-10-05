@@ -1,5 +1,25 @@
+from genericpath import isfile
+import os
 from discord.ext import commands
 from discord.utils import get
+
+def checkPath(path, *args):
+    val = 1
+
+    if not os.path.exists(path):
+            os.makedirs(path)
+            val = 0
+    
+    if args:
+        if not isfile(path + args):
+            with open(path + args, 'w') as file:
+                pass
+            val = 0
+    return val
+
+async def sendResponse(ctx, response):
+    await ctx.send(response)
+    await ctx.message.delete()
 
 async def getUserByNameOrID(ctx, target):
     #Attempt to search by id

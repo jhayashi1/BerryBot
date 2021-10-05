@@ -3,6 +3,7 @@ from datetime import datetime
 import json
 import os
 import storage
+import utils
 
 class LoggingCog(commands.Cog):
     def __init__(self, bot):
@@ -50,17 +51,13 @@ class LoggingCog(commands.Cog):
 
             self.storage[name]["duration"] = str(datetime.strptime(self.storage[name]["after_time"], "%H:%M:%S") - datetime.strptime(self.storage[name]["before_time"], "%H:%M:%S"))
 
-            try:
+            if utils.checkPath(path):
                 print("Opening json for " + name)
                 with open(path + filename, 'r') as json_file:
                     replist = json.load(json_file)
                     replist[len(replist)] = self.storage[name]
-            except FileNotFoundError:
-                print("No file detected. Adding JSON file for " + name)
-
-                if not os.path.exists(path):
-                    os.makedirs(path)
-
+            else:
+                print("No voice log detected for " + name + " creating voice log...")
                 replist = {}
                 replist[0] = self.storage[name]
 
@@ -92,9 +89,8 @@ def log_message(message):
                 "message": message.content
             }
     except FileNotFoundError:
-        if not os.path.exists(path):
-            os.makedirs(path)
-
+        print("No chat log detected for " + name + " adding chat log...")
+        utils.checkPath(path)
         replist = {}
         replist[0] = {
                 "date": now.strftime("%m/%d/%y"),

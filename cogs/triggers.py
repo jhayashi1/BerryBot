@@ -2,7 +2,7 @@ from discord.ext import commands
 import discord
 import storage
 import json
-import os
+import utils
 
 ERROR_MESSAGE = "Usage: ,trigger [add|remove|list] [\"trigger\"] [\"response\"]"
 
@@ -17,20 +17,21 @@ class TriggersCog(commands.Cog):
         check = error_check(args)
 
         if (check == 0):
-            await ctx.send(add_trigger(ctx, args[1], args[2]))
+            response = add_trigger(ctx, args[1], args[2])
         elif (check == 1):
-            await ctx.send(remove_trigger(ctx, args[1]))
+            response = remove_trigger(ctx, args[1])
         elif (check == 2):
-            await ctx.send(embed=list_triggers(ctx))
+            response = embed=list_triggers(ctx)
         else:
-            await ctx.send(ERROR_MESSAGE)
-            return None
-        await ctx.message.delete()
+            response = ERROR_MESSAGE
+
+        utils.sendResponse(ctx, response)
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.id == self.bot.user.id:
-            return None
+        #TODO test this to see if bot responds to its own triggers
+        if message.author == self.bot.user:
+            return
 
         response = search_triggers(message)
 
@@ -57,7 +58,7 @@ def add_trigger(ctx, trigger, response):
     path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/triggers/"
     filename = "triggers.json"
 
-    try:
+    if utils.checkPath(path):
         with open(path + filename, 'r') as json_file:
             replist = json.load(json_file)
             try:
@@ -67,10 +68,7 @@ def add_trigger(ctx, trigger, response):
                 replist[trigger] = {
                     "response": response
                 }
-    except FileNotFoundError:
-        if not os.path.exists(path):
-            os.makedirs(path)
-
+    else:
         replist = {}
         replist[trigger] = {
             "response": response
@@ -89,12 +87,14 @@ def remove_trigger(ctx, trigger):
             replist = json.load(json_file)
             if replist[trigger]:
                 del replist[trigger]
+    #TODO merge these together somehow
     except FileNotFoundError:
         return "Cannot remove trigger '" + trigger + "'!"
     except KeyError:
         return "Cannot remove trigger '" + trigger + "'!"
 
     storage.save_json(path + filename, replist)
+
     return "Removed '" + trigger + "' from trigger list"
 
 
