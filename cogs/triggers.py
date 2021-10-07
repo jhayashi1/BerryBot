@@ -25,12 +25,12 @@ class TriggersCog(commands.Cog):
         else:
             response = ERROR_MESSAGE
 
-        utils.sendResponse(ctx, response)
+        await utils.sendResponse(ctx, response)
 
     @commands.Cog.listener()
     async def on_message(self, message):
         #TODO test this to see if bot responds to its own triggers
-        if message.author == self.bot.user:
+        if message.author.bot or message.content[0] == ',':
             return
 
         response = search_triggers(message)

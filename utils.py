@@ -1,7 +1,9 @@
-from genericpath import isfile
 import os
+from configparser import ConfigParser
+from genericpath import isfile
 from discord.ext import commands
 from discord.utils import get
+from shutil import copyfile
 
 def checkPath(path, *args):
     val = 1
@@ -11,11 +13,14 @@ def checkPath(path, *args):
             val = 0
     
     if args:
-        if not isfile(path + args):
-            with open(path + args, 'w') as file:
-                pass
+        filename = ''.join(args)
+        if not isfile(path + filename):
             val = 0
+
     return val
+
+def addConfig(path):
+    copyfile("./tools/configEx.ini", path + "config.ini")
 
 async def sendResponse(ctx, response):
     await ctx.send(response)

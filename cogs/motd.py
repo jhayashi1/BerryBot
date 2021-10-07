@@ -10,14 +10,14 @@ class MotdCog(commands.Cog):
     
     @commands.command(brief='Set motd channel')
     async def motd(self, ctx, arg1):
-        channel = utils.getChannelByNameOrID(ctx, arg1)
+        channel = await utils.getChannelByNameOrID(ctx, arg1)
 
         if channel is not None:
             response = setMotdChannel(ctx, channel)
         else:
             response = "Error setting MOTD channel"
         
-        utils.sendResponse(ctx, response)
+        await utils.sendResponse(ctx, response)
 
     @commands.command(brief='Add role or user to subscription list')
     async def subscribe(self, ctx, *args):
@@ -69,20 +69,20 @@ def setMotdChannel(ctx, channel):
     path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/"
     file = "config.ini"
 
-    if not utils.checkPath(path):
+    #Check for path and config file
+    if not utils.checkPath(path, file):
         utils.addConfig(path)
-
-    #TODO test this
-    if not os.path.exists(path):
-        os.mkdir(path)
-        with open(path + file, 'w') as config:
-            pass
-
+    
+    #Set config parser
     configur = ConfigParser()
     configur.read(path + file)
 
+    #Write to config file
+    configur.set('params', 'motd', str(channel.id))
+    with open(path + file, 'w') as config:
+        configur.write(config)
 
-    #TODO set channel and save to ini file
+    return "Successfully set motd channel to " + channel.name
 
 def setup(bot):
     bot.add_cog(MotdCog(bot))
