@@ -22,6 +22,12 @@ def checkPath(path, *args):
 def addConfig(path):
     copyfile("./tools/configEx.ini", path + "config.ini")
 
+#TODO getint is not working
+def getConfigParam(path, *args):
+    configur = ConfigParser()
+    configur.read(path)
+    return configur.getint(*args)
+
 async def sendResponse(ctx, response):
     await ctx.send(response)
     await ctx.message.delete()

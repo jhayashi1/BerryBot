@@ -34,7 +34,14 @@ class MotdCog(commands.Cog):
                 print(e)
                 response = "No user or role found!"
 
-        utils.sendResponse(ctx, response)   
+        await utils.sendResponse(ctx, response)
+    
+    @commands.command(brief='Remove role or user from subscription list')
+    async def unsubscribe(self, ctx, target):
+        target = await utils.getUserByNameOrID(ctx, target)
+
+        if target is not None:
+            response = await removeSubscriber(ctx, target)
 
     @commands.command(brief='Add role or user to subscription list')
     async def say(self, ctx, args):
@@ -44,9 +51,7 @@ async def addSubscriber(ctx, target):
         path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/config.ini"
 
         try:
-            configur = ConfigParser()
-            configur.read(path)
-            channelId = configur.getint('params', 'motd')
+            channelId = utils.getConfigParam('params', 'motd')
 
             channel = ctx.bot.get_channel(channelId)
             await channel.set_permissions(target, read_messages=True, send_messages=False)
@@ -54,16 +59,13 @@ async def addSubscriber(ctx, target):
             print(e)
             return "Error adding user!"
 
-        return "User " + target.name +" added to subscription list"
+        return "User " + target.name + " added to subscription list"
 
-
-def removeSubscriber(target):
-    return 0
+async def removeSubscriber(ctx, target):
+    path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/config.ini"
+    return "User " + target.name + " removed from subscription list"
     #TODO remove subscription
 
-def listSubscribers():
-    return 0
-    #TODO list subscribers for channel
 
 def setMotdChannel(ctx, channel):
     path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/"

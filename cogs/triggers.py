@@ -29,7 +29,6 @@ class TriggersCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        #TODO test this to see if bot responds to its own triggers
         if message.author.bot or message.content[0] == ',':
             return
 
