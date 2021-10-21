@@ -14,14 +14,19 @@ class TriggersCog(commands.Cog):
     @commands.command()
     async def trigger(self, ctx, *args):
 
+        #Check the args
         check = error_check(args)
 
+        #Add command
         if (check == 0):
             response = add_trigger(ctx, args[1], args[2])
+        #Remove command
         elif (check == 1):
             response = remove_trigger(ctx, args[1])
+        #List command
         elif (check == 2):
             response = embed=list_triggers(ctx)
+        #Error
         else:
             response = ERROR_MESSAGE
 
@@ -29,9 +34,11 @@ class TriggersCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        #If the user is the bot or the message is a command
         if message.author.bot or message.content[0] == ',':
             return
 
+        #Search server list for triggers in the message
         response = search_triggers(message)
 
         if response:
