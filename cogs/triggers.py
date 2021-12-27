@@ -1,6 +1,5 @@
 from discord.ext import commands
 import discord
-import storage
 import json
 import utils
 
@@ -80,7 +79,7 @@ def add_trigger(ctx, trigger, response):
             "response": response
         }
 
-    storage.save_json(path + filename, replist)
+    utils.save_json(path + filename, replist)
     return "Successfully added trigger '" + trigger + "'"
 
 
@@ -99,7 +98,7 @@ def remove_trigger(ctx, trigger):
     except KeyError:
         return "Cannot remove trigger '" + trigger + "'!"
 
-    storage.save_json(path + filename, replist)
+    utils.save_json(path + filename, replist)
 
     return "Removed '" + trigger + "' from trigger list"
 

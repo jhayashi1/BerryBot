@@ -1,6 +1,6 @@
 import discord
 import os
-import storage
+import utils
 from discord.ext import commands
 
 path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
@@ -25,7 +25,7 @@ async def on_ready():
     print("bird up")
     for guild in bot.guilds:
         for member in guild.members:
-            if storage.check_info(member) == "Error":
-                storage.add_entry(str(member), member.id, member.guild.id)
+            if utils.check_info(member) == "Error":
+                utils.add_user_entry(str(member), member.id, member.guild.id)
 
 bot.run(token)

@@ -1,9 +1,12 @@
 import os
+import json
 from configparser import ConfigParser
 from genericpath import isfile
 from discord.ext import commands
 from discord.utils import get
 from shutil import copyfile
+
+replist = {}
 
 def checkPath(path, *args):
     val = 1
@@ -70,3 +73,46 @@ async def getChannelByNameOrID(ctx, target):
     channel = get(ctx.bot.get_all_channels(), name=name)
 
     return channel
+
+#Save json info at directory
+def save_json(path, dict):
+    with open(path, 'w') as json_file:
+        json.dump(dict, json_file, indent=4)
+
+#Find json file at directory
+def where_json(file_name):
+    return os.path.exists(file_name)
+
+#Adds user info to db when they are not found in the db
+#TODO call this method when user joins guild
+def add_user_entry(name, id, guild):
+    replist[name] = {
+        "memberID": id,
+        "guildID": guild,
+        "sentry_enabled": False
+    }
+    save_json('varStorage.json', replist)
+    return "done"
+
+
+#Deprecated method of saving json
+def save_to_json(dict):
+    with open('varStorage.json', 'w') as fp:
+        json.dump(dict, fp, indent=4)
+
+#Deprecated method of loading info from json file
+def load_from_json():
+    try:
+        with open('varStorage.json') as json_file:
+            global replist
+            replist = json.load(json_file)
+    except json.decoder.JSONDecodeError:
+        add_user_entry("Placeholder", 0, 0)
+
+def check_info(name):
+    load_from_json()
+    try:
+        return replist[name]
+    except:
+        return "Error"
+    
