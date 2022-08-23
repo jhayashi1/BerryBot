@@ -5,7 +5,6 @@ import utils
 
 ERROR_MESSAGE = "Usage: ,trigger [add|remove|list] [\"trigger\"] [\"response\"]"
 
-
 class TriggersCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

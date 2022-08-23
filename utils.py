@@ -45,7 +45,7 @@ async def getUserByNameOrID(ctx, target):
     #Attempt to search by name
     #TODO search by name and discriminator
     name = ' '.join(target)
-    print(name)
+    print("Searching for user " + name)
     length = len(name)
     converter = commands.MemberConverter()
     try:
