@@ -27,7 +27,7 @@ async def load_extensions():
             await bot.load_extension('cogs.' + name)
 
 bot = MyBot(command_prefix=',', intents=intents)
-bot.run('NzQ4MzU0MTI3MzMxMDY1ODc4.GsZ3hD._Eyimr7ttS_0ceEnB7dcsiLR-xABCFCD8xQEsY')
+bot.run(token)
 
 # @bot.event
 # async def on_ready():
