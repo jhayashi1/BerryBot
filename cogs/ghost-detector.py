@@ -13,9 +13,9 @@ class GhostDetectorCog(commands.Cog):
         extra_command = args[0]
 
         if extra_command == "add":
-            response = add_ghost(ctx, args)
+            response = await add_ghost(ctx, args)
         elif extra_command == "remove":
-            response = remove_ghost(args)
+            response = await remove_ghost(ctx, args)
         elif extra_command == "list":
             response = list_ghosts()
         else:
@@ -29,18 +29,15 @@ class GhostDetectorCog(commands.Cog):
         if message.author.bot:
             return
 
-        if message.author.status == discord.Status.offline:
+        if message.author.status == discord.Status.offline and check_watchlist(message.author):
             await message.add_reaction('👻')
     
 
 async def add_ghost(ctx, args):
     path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/"
     filename = 'ghost-watchlist.json'
-    username = ""
 
-    for element in args:
-        username += element
-    
+    username = list_to_username(args)
     member = await utils.getUserByNameOrID(ctx, username)
 
     if not member:
@@ -66,13 +63,53 @@ async def add_ghost(ctx, args):
 
     utils.save_json(path + filename, replist)
 
-    return "Successfully added member " + username + " to ghost watchlist"
+    return 'Successfully added member "' + username + '" to ghost watchlist'
 
-def remove_ghost(args):
-    return None
+async def remove_ghost(ctx, args):
+    path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/"
+    filename = 'ghost-watchlist.json'    
+    
+    username = list_to_username(args)
+    member = await utils.getUserByNameOrID(ctx, username)
+
+    try:
+        with open(path + filename, 'r') as json_file:
+            replist = json.load(json_file)
+            if replist[str(member.id)]:
+                del replist[str(member.id)]
+    except (FileNotFoundError, KeyError):
+        return 'User "' + username + '" not found in ghost watchlist'
+
+    utils.save_json(path + filename, replist)
+
+    return 'Removed "' + username + '" from ghost watchlist' 
 
 def list_ghosts():
     return None
+
+#TODO there is definitely a better way to do this
+def check_watchlist(sender):
+    path = utils.getGuildPath(sender.guild.name, sender.guild.id) + "/"
+    filename = 'ghost-watchlist.json'    
+
+    try:
+        with open(path + filename, 'r') as json_file:
+            replist = json.load(json_file)
+            # If user exists in watchlist, return true
+            if replist[str(sender.id)]:
+                return True
+    except (FileNotFoundError, KeyError):
+        return False
+
+    return False
+
+def list_to_username(args):
+    username = ""
+
+    for element in args[1:]:
+        username += element
+    
+    return username
 
 async def setup(bot):
     await bot.add_cog(GhostDetectorCog(bot))

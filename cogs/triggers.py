@@ -83,7 +83,7 @@ def add_trigger(ctx, trigger, response):
 
 
 def remove_trigger(ctx, trigger):
-    path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/triggers/"
+    path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/triggers/"
     filename = "triggers.json"
 
     try:
@@ -91,10 +91,7 @@ def remove_trigger(ctx, trigger):
             replist = json.load(json_file)
             if replist[trigger]:
                 del replist[trigger]
-    #TODO merge these together somehow
-    except FileNotFoundError:
-        return "Cannot remove trigger '" + trigger + "'!"
-    except KeyError:
+    except (FileNotFoundError, KeyError):
         return "Cannot remove trigger '" + trigger + "'!"
 
     utils.save_json(path + filename, replist)
@@ -103,8 +100,9 @@ def remove_trigger(ctx, trigger):
 
 
 def list_triggers(ctx):
-    path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/triggers/"
+    path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/triggers/"
     filename = "triggers.json"
+    
     triggers_embed = discord.Embed(
         title="BerryBot Triggers", color=discord.Color.orange())
 
@@ -125,7 +123,7 @@ def list_triggers(ctx):
 
 
 def search_triggers(message):
-    path = "./tools/" + message.guild.name + " (" + str(message.guild.id) + ")/triggers/"
+    path = utils.getGuildPath(message.guild.name, message.guild.id) + "/triggers/"
     filename = "triggers.json"
 
     try:
