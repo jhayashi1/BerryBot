@@ -15,6 +15,10 @@ class TriggersCog(commands.Cog):
         #Check the args
         check = error_check(args)
 
+        #Initalize response variables
+        response = None
+        embed = None
+
         #Add command
         if (check == 0):
             response = add_trigger(ctx, args[1], args[2])
@@ -23,12 +27,12 @@ class TriggersCog(commands.Cog):
             response = remove_trigger(ctx, args[1])
         #List command
         elif (check == 2):
-            response = embed=list_triggers(ctx)
+            embed = embed=list_triggers(ctx)
         #Error
         else:
             response = ERROR_MESSAGE
 
-        await utils.sendResponse(ctx, response)
+        await utils.sendResponse(ctx, response, embed)
 
     @commands.Cog.listener()
     async def on_message(self, message):
