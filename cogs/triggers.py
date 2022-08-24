@@ -4,6 +4,9 @@ import json
 import utils
 
 ERROR_MESSAGE = "Usage: ,trigger [add|remove|list] [\"trigger\"] [\"response\"]"
+FILENAME = "triggers.json"
+path = None
+#TODO make sure that this new format works
 
 class TriggersCog(commands.Cog):
     def __init__(self, bot):
@@ -11,9 +14,9 @@ class TriggersCog(commands.Cog):
 
     @commands.command()
     async def trigger(self, ctx, *args):
-
         #Check the args
         check = error_check(args)
+        path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/"
 
         #Initalize response variables
         response = None
@@ -62,12 +65,9 @@ def error_check(args):
     return -1
 
 
-def add_trigger(ctx, trigger, response):
-    path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/triggers/"
-    filename = "triggers.json"
-
+def add_trigger(trigger, response):
     if utils.checkPath(path):
-        with open(path + filename, 'r') as json_file:
+        with open(path + FILENAME, 'r') as json_file:
             replist = json.load(json_file)
             try:
                 if replist[trigger]:
@@ -82,36 +82,30 @@ def add_trigger(ctx, trigger, response):
             "response": response
         }
 
-    utils.save_json(path + filename, replist)
+    utils.save_json(path + FILENAME, replist)
     return "Successfully added trigger '" + trigger + "'"
 
 
-def remove_trigger(ctx, trigger):
-    path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/triggers/"
-    filename = "triggers.json"
-
+def remove_trigger(trigger):
     try:
-        with open(path + filename, 'r') as json_file:
+        with open(path + FILENAME, 'r') as json_file:
             replist = json.load(json_file)
             if replist[trigger]:
                 del replist[trigger]
     except (FileNotFoundError, KeyError):
         return "Cannot remove trigger '" + trigger + "'!"
 
-    utils.save_json(path + filename, replist)
+    utils.save_json(path + FILENAME, replist)
 
     return "Removed '" + trigger + "' from trigger list"
 
 
-def list_triggers(ctx):
-    path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/triggers/"
-    filename = "triggers.json"
-    
+def list_triggers():
     triggers_embed = discord.Embed(
         title="BerryBot Triggers", color=discord.Color.orange())
 
     try:
-        with open(path + filename, 'r') as json_file:
+        with open(path + FILENAME, 'r') as json_file:
             replist = json.load(json_file)
             for key in replist.keys():
                 response = replist[key]["response"]
@@ -127,11 +121,8 @@ def list_triggers(ctx):
 
 
 def search_triggers(message):
-    path = utils.getGuildPath(message.guild.name, message.guild.id) + "/triggers/"
-    filename = "triggers.json"
-
     try:
-        with open(path + filename, 'r') as json_file:
+        with open(path + FILENAME, 'r') as json_file:
             replist = json.load(json_file)
             response = None
             for key in replist.keys():
