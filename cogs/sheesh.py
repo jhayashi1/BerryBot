@@ -30,5 +30,5 @@ class SheeshCog(commands.Cog):
 
         await ctx.send("Joey not found")
 
-def setup(bot):
-    bot.add_cog(SheeshCog(bot))
+async def setup(bot):
+    await bot.add_cog(SheeshCog(bot))

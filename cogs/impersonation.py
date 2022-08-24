@@ -156,5 +156,5 @@ class ImpersonationCog(commands.Cog):
 
             return [pic, nick]
 
-def setup(bot):
-    bot.add_cog(ImpersonationCog(bot))
+async def setup(bot):
+    await bot.add_cog(ImpersonationCog(bot))

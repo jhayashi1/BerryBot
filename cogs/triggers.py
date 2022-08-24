@@ -59,7 +59,7 @@ def error_check(args):
 
 
 def add_trigger(ctx, trigger, response):
-    path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/triggers/"
+    path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/triggers/"
     filename = "triggers.json"
 
     if utils.checkPath(path):
@@ -144,5 +144,5 @@ def search_triggers(message):
     except FileNotFoundError:
         return None
 
-def setup(bot):
-    bot.add_cog(TriggersCog(bot))
+async def setup(bot):
+    await bot.add_cog(TriggersCog(bot))

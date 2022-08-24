@@ -39,5 +39,5 @@ class RedditCog(commands.Cog):
             await ctx.send("Error! Invalid user")
             print(e)
 
-def setup(bot):
-    bot.add_cog(RedditCog(bot))
+async def setup(bot):
+    await bot.add_cog(RedditCog(bot))

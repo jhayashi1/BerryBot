@@ -1,2 +1,3 @@
-discordpy
+discord.py
 praw
+requests

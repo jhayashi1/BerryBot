@@ -21,5 +21,5 @@ class SentryCog(commands.Cog):
     #         await name.move_to(channel=None)
     #         #await bot.ch.send(name.mention + " nice try idiot")
 
-def setup(bot):
-    bot.add_cog(SentryCog(bot))
+async def setup(bot):
+    await bot.add_cog(SentryCog(bot))

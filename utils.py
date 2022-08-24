@@ -8,6 +8,9 @@ from shutil import copyfile
 
 replist = {}
 
+def getGuildPath(name, id):
+    return "./tools/" + name + " (" + str(id) + ")"
+
 def checkPath(path, *args):
     val = 1
 
@@ -60,7 +63,6 @@ async def getUserByNameOrID(ctx, target):
     return member
 
 async def getChannelByNameOrID(ctx, target):
-
     #Attempt to search by id
     channel = ctx.bot.get_channel(target)
     if channel is not None:

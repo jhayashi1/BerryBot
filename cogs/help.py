@@ -12,5 +12,5 @@ class HelpCog(commands.Cog):
             print(command.brief)
 
 
-def setup(bot):
-    bot.add_cog(HelpCog(bot))
+async def setup(bot):
+    await bot.add_cog(HelpCog(bot))

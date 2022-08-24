@@ -112,5 +112,5 @@ def log_message(message):
     #Save the new info to the json file
     storage.save_json(path + filename, replist)
 
-def setup(bot):
-    bot.add_cog(LoggingCog(bot))
+async def setup(bot):
+    await bot.add_cog(LoggingCog(bot))

@@ -86,5 +86,5 @@ def setMotdChannel(ctx, channel):
 
     return "Successfully set motd channel to " + channel.name
 
-def setup(bot):
-    bot.add_cog(MotdCog(bot))
+async def setup(bot):
+    await bot.add_cog(MotdCog(bot))

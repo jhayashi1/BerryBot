@@ -68,10 +68,24 @@ class AdminCog(commands.Cog):
                 if emoji.name in emojis:
                     await message.add_reaction(emoji=emoji)
 
+    @commands.command(brief='Brings everybody in vc to the user\'s voice channel')
+    async def assemble(self, ctx):
+        home = ctx.author.voice.channel
+        channels = ctx.guild.voice_channels
+
+        if home is not None:
+            for channel in channels:
+                for member in channel.members:
+                    await member.move_to(home)
+        else:
+            await ctx.send("You're not in a channel!")                    
 
 
-def setup(bot):
-    bot.add_cog(AdminCog(bot))
+
+
+
+async def setup(bot):
+    await bot.add_cog(AdminCog(bot))
 
 def disconnect_member(member):
     print("yeet")
