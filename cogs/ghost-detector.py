@@ -56,7 +56,7 @@ async def add_ghost(ctx, args):
     member = await utils.getUserByNameOrID(ctx, username)
 
     #If the member cannot be found, return an error message
-    if not member:
+    if member is None:
         return "Could not find member with name " + username
 
     #If the path exists, try to add the user to the watchlist 
@@ -110,18 +110,31 @@ async def remove_ghost(ctx, args):
 def list_ghosts():
     list_embed = discord.Embed(title="Ghost Watchlist", color=discord.Color.light_gray)
 
-    #Loop through replist
+    try:
+        with open(path + FILENAME, 'r') as json_file:
+            replist = json.load(json_file)
+            #Loop through json file
+            for key in replist.keys():
+                #Retrieve user's name from entry and add to embed
+                name = replist[key]["name"]
+                list_embed.add_field(
+                    name=name,
+                    inline=False
+                )
 
-    return None
+        return list_embed
+    except FileNotFoundError:
+        return list_embed
 
-#TODO there is definitely a better way to do this
+#Check watchlist for member
 def check_watchlist(sender):
     try:
         with open(path + FILENAME, 'r') as json_file:
             replist = json.load(json_file)
-            # If user exists in watchlist, return true
+            #If user exists in watchlist, return true
             if replist[str(sender.id)]:
                 return True
+    #If file or user doesn't exist, return false
     except (FileNotFoundError, KeyError):
         return False
 

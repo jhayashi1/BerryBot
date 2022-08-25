@@ -42,7 +42,7 @@ class ImpersonationCog(commands.Cog):
             print(time, "No targets found in", guild.name)
 
 
-        lines = open("./tools/people.txt").read().splitlines()
+        lines = open("./servers/people.txt").read().splitlines()
         target_member = None
         index = 0
 
@@ -69,7 +69,7 @@ class ImpersonationCog(commands.Cog):
               "minutes before disconnecting")
 
         # if vc is not None:
-        #     vc.play(discord.FFmpegPCMAudio(executable="./ffmpeg/bin/ffmpeg.exe", source="./tools/audio/audio.wav"))
+        #     vc.play(discord.FFmpegPCMAudio(executable="./ffmpeg/bin/ffmpeg.exe", source="./servers/audio/audio.wav"))
         #     while vc.is_playing():
         #         sleep(1)
 
@@ -90,10 +90,10 @@ class ImpersonationCog(commands.Cog):
             if r.status_code == 200:
                 r.raw.decode_content = True
 
-                with open("./tools/images/Currentpfp.png", 'wb') as f:
+                with open("./servers/images/Currentpfp.png", 'wb') as f:
                     shutil.copyfileobj(r.raw, f)
 
-                with open("./tools/images/Currentpfp.png", 'rb') as p:
+                with open("./servers/images/Currentpfp.png", 'rb') as p:
                     pic = p.read()
 
                 await self.bot.user.edit(avatar=pic)
@@ -106,7 +106,7 @@ class ImpersonationCog(commands.Cog):
 
     @commands.command()
     async def default(self, ctx):
-        with open("./tools/images/default.png", 'rb') as p:
+        with open("./servers/images/default.png", 'rb') as p:
             pic = p.read()
         await self.bot.user.edit(avatar=pic)
         await ctx.guild.get_member(self.bot.user.id).edit(nick="BerryBot")
@@ -119,7 +119,7 @@ class ImpersonationCog(commands.Cog):
         if vc is None and voice_channel is not None:
             vc = await voice_channel.connect()
 
-        vc.play(discord.FFmpegPCMAudio(executable="./ffmpeg/bin/ffmpeg.exe", source="./tools/audio/audio.wav"))
+        vc.play(discord.FFmpegPCMAudio(executable="./ffmpeg/bin/ffmpeg.exe", source="./servers/audio/audio.wav"))
 
         while vc.is_playing():
             sleep(.1)
@@ -148,10 +148,10 @@ class ImpersonationCog(commands.Cog):
         if r.status_code == 200:
             r.raw.decode_content = True
 
-            with open("./tools/images/Currentpfp.png", 'wb') as f:
+            with open("./servers/images/Currentpfp.png", 'wb') as f:
                 shutil.copyfileobj(r.raw, f)
 
-            with open("./tools/images/Currentpfp.png", 'rb') as p:
+            with open("./servers/images/Currentpfp.png", 'rb') as p:
                 pic = p.read()
 
             return [pic, nick]

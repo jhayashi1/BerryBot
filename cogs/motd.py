@@ -48,7 +48,7 @@ class MotdCog(commands.Cog):
         await ctx.send(args)
     
 async def addSubscriber(ctx, target):
-        path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/config.ini"
+        path = "./servers/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/config.ini"
 
         try:
             channelId = utils.getConfigParam('params', 'motd')
@@ -62,13 +62,13 @@ async def addSubscriber(ctx, target):
         return "User " + target.name + " added to subscription list"
 
 async def removeSubscriber(ctx, target):
-    path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/config.ini"
+    path = "./servers/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/config.ini"
     return "User " + target.name + " removed from subscription list"
     #TODO remove subscription
 
 
 def setMotdChannel(ctx, channel):
-    path = "./tools/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/"
+    path = "./servers/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/"
     file = "config.ini"
 
     #Check for path and config file

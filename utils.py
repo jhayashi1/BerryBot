@@ -9,7 +9,7 @@ from shutil import copyfile
 replist = {}
 
 def getGuildPath(name, id):
-    return "./tools/" + name + " (" + str(id) + ")"
+    return "./servers/" + name + " (" + str(id) + ")"
 
 def checkPath(path, *args):
     val = 1
@@ -26,7 +26,7 @@ def checkPath(path, *args):
     return val
 
 def addConfig(path):
-    copyfile("./tools/configEx.ini", path + "config.ini")
+    copyfile("./servers/configEx.ini", path + "config.ini")
 
 #TODO getint is not working
 def getConfigParam(path, *args):

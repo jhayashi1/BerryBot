@@ -21,7 +21,7 @@ class SheeshCog(commands.Cog):
                         target_channel = channel
             if target_channel is not None:
                 vc = await target_channel.connect()
-                vc.play(discord.FFmpegPCMAudio(executable="./ffmpeg/bin/ffmpeg.exe", source="./tools/audio/sheesh.mp3"))
+                vc.play(discord.FFmpegPCMAudio(executable="./ffmpeg/bin/ffmpeg.exe", source="./servers/audio/sheesh.mp3"))
                 while vc.is_playing():
                     sleep(1)
                 await vc.disconnect()
