@@ -34,8 +34,8 @@ def getConfigParam(path, *args):
     configur.read(path)
     return configur.getint(*args)
 
-async def sendResponse(ctx, response, embed):
-    await ctx.send(response, embed=embed)
+async def sendResponse(ctx, response=None, embed=None):
+    await ctx.send(content=response, embed=embed)
     #await ctx.message.delete()
 
 async def getUserByNameOrID(ctx, target):

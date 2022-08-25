@@ -4,96 +4,112 @@ from cogs.triggers import ERROR_MESSAGE
 import utils
 import json
 
+ERROR_MESSAGE = "error"
+FILENAME = "ghost-watchlist.json"
+path = None
+
 class GhostDetectorCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(brief='Add user to watchlist for being a ghost')
     async def ghost(self, ctx, *args):
+        #Set the path for the file
+        path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/"
         extra_command = args[0]
 
+        #Initialize response and embed
+        response = None
+        embed = None
+
+        #Parse the extra command
         if extra_command == "add":
             response = await add_ghost(ctx, args)
         elif extra_command == "remove":
             response = await remove_ghost(ctx, args)
         elif extra_command == "list":
-            response = list_ghosts()
+            embed = list_ghosts()
         else:
             response = ERROR_MESSAGE
-            
-        await utils.sendResponse(ctx, response)
+
+        #Send response  
+        await utils.sendResponse(ctx, response=response, embed=embed)
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        #If the user is the bot or the message is a command
+        #If the user is the bot, ignore it
         if message.author.bot:
             return
 
+        #If the user appears offline and they're on the watchlist, react with the ghost emoji
         if message.author.status == discord.Status.offline and check_watchlist(message.author):
             await message.add_reaction('👻')
     
-
+#Add user to ghost watchlist
 async def add_ghost(ctx, args):
-    path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/"
-    filename = 'ghost-watchlist.json'
-
+    #Get username and member object
     username = list_to_username(args)
     member = await utils.getUserByNameOrID(ctx, username)
 
+    #If the member cannot be found, return an error message
     if not member:
         return "Could not find member with name " + username
 
-    if utils.checkPath(path, filename):
-        with open(path + filename, 'r') as json_file:
+    #If the path exists, try to add the user to the watchlist 
+    if utils.checkPath(path, FILENAME):
+        with open(path + FILENAME, 'r') as json_file:
             replist = json.load(json_file)
+            #If the user is already on the watchlist, return error message
             try:
                 if replist[member.id]:
                     return "Member " + username + "already on ghost watchlist"
+            #If the user is not on the watchlist, add them 
             except KeyError:
                 replist[member.id] = {
                     "name": member.name + "#" + member.discriminator,
                     "nickname": member.nick
                 }
+    #If the path doesn't exists, add the user to the watchlist
     else:
         replist = {}
         replist[member.id] = {
                     "name": member.name + "#" + member.discriminator,
                     "nickname": member.nick
         }
-
-    utils.save_json(path + filename, replist)
+    #Save the updated json file
+    utils.save_json(path + FILENAME, replist)
 
     return 'Successfully added member "' + username + '" to ghost watchlist'
-
-async def remove_ghost(ctx, args):
-    path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/"
-    filename = 'ghost-watchlist.json'    
     
+#Remove user from ghost watchlist
+async def remove_ghost(ctx, args):    
+    #Get username and member object
     username = list_to_username(args)
     member = await utils.getUserByNameOrID(ctx, username)
 
     try:
-        with open(path + filename, 'r') as json_file:
+        with open(path + FILENAME, 'r') as json_file:
             replist = json.load(json_file)
             if replist[str(member.id)]:
                 del replist[str(member.id)]
     except (FileNotFoundError, KeyError):
         return 'User "' + username + '" not found in ghost watchlist'
 
-    utils.save_json(path + filename, replist)
+    utils.save_json(path + FILENAME, replist)
 
     return 'Removed "' + username + '" from ghost watchlist' 
 
 def list_ghosts():
+    list_embed = discord.Embed(title="Ghost watchlist", color=discord.Color.light_gray)
+
+    #Loop through replist
+
     return None
 
 #TODO there is definitely a better way to do this
 def check_watchlist(sender):
-    path = utils.getGuildPath(sender.guild.name, sender.guild.id) + "/"
-    filename = 'ghost-watchlist.json'    
-
     try:
-        with open(path + filename, 'r') as json_file:
+        with open(path + FILENAME, 'r') as json_file:
             replist = json.load(json_file)
             # If user exists in watchlist, return true
             if replist[str(sender.id)]:

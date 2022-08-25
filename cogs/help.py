@@ -17,7 +17,7 @@ class HelpCog(commands.Cog):
                 inline=False
             )
 
-        utils.sendResponse(ctx, None, help_embed)
+        utils.sendResponse(ctx, embed=help_embed)
 
 async def setup(bot):
     await bot.add_cog(HelpCog(bot))

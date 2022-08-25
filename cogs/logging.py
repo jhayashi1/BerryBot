@@ -29,7 +29,7 @@ class LoggingCog(commands.Cog):
         else:
             response = "logging [enable | disable]"
 
-        utils.sendResponse(ctx, response)
+        utils.sendResponse(ctx, response=response)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):

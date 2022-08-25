@@ -30,12 +30,12 @@ class TriggersCog(commands.Cog):
             response = remove_trigger(ctx, args[1])
         #List command
         elif (check == 2):
-            embed = embed=list_triggers(ctx)
+            embed = list_triggers(ctx)
         #Error
         else:
             response = ERROR_MESSAGE
 
-        await utils.sendResponse(ctx, response, embed)
+        await utils.sendResponse(ctx, response=response, embed=embed)
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -117,7 +117,7 @@ def list_triggers():
 
         return triggers_embed
     except FileNotFoundError:
-        return "No triggers found!"
+        return triggers_embed
 
 
 def search_triggers(message):
