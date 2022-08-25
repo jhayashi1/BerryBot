@@ -14,23 +14,24 @@ class TriggersCog(commands.Cog):
 
     @commands.command()
     async def trigger(self, ctx, *args):
+        global path
+        path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/"
         #Check the args
         check = error_check(args)
-        path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/"
-
+        
         #Initalize response variables
         response = None
         embed = None
 
         #Add command
         if (check == 0):
-            response = add_trigger(ctx, args[1], args[2])
+            response = add_trigger(args[1], args[2])
         #Remove command
         elif (check == 1):
-            response = remove_trigger(ctx, args[1])
+            response = remove_trigger(args[1])
         #List command
         elif (check == 2):
-            embed = list_triggers(ctx)
+            embed = list_triggers()
         #Error
         else:
             response = ERROR_MESSAGE
@@ -39,6 +40,9 @@ class TriggersCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        global path
+        path = utils.getGuildPath(message.guild.name, message.guild.id) + "/"
+
         #If the user is the bot or the message is a command
         if message.author.bot or message.content[0] == ',':
             return
@@ -66,7 +70,7 @@ def error_check(args):
 
 
 def add_trigger(trigger, response):
-    if utils.checkPath(path):
+    if utils.checkPath(path, FILENAME):
         with open(path + FILENAME, 'r') as json_file:
             replist = json.load(json_file)
             try:

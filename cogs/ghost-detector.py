@@ -15,6 +15,7 @@ class GhostDetectorCog(commands.Cog):
     @commands.command(brief='Add user to watchlist for being a ghost')
     async def ghost(self, ctx, *args):
         #Set the path for the file
+        global path
         path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/"
         extra_command = args[0]
 
@@ -37,6 +38,9 @@ class GhostDetectorCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        global path
+        path = utils.getGuildPath(message.guild.name, message.guild.id) + "/"
+
         #If the user is the bot, ignore it
         if message.author.bot:
             return
