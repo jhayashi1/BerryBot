@@ -17,7 +17,7 @@ class MotdCog(commands.Cog):
         else:
             response = "Error setting MOTD channel"
         
-        await utils.sendResponse(ctx, response)
+        await utils.sendResponse(ctx, response=response)
 
     @commands.command(brief='Add role or user to subscription list')
     async def subscribe(self, ctx, *args):
@@ -34,7 +34,7 @@ class MotdCog(commands.Cog):
                 print(e)
                 response = "No user or role found!"
 
-        await utils.sendResponse(ctx, response)
+        await utils.sendResponse(ctx, response=response)
     
     @commands.command(brief='Remove role or user from subscription list')
     async def unsubscribe(self, ctx, target):

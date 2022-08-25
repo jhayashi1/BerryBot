@@ -36,11 +36,11 @@ class LoggingCog(commands.Cog):
         #If the user is the bot or logging is not enabled
         if member.id == self.bot.user.id or not self.enabled:
             return None
-
-        name = member.name + "#" + member.discriminator
-        path = "./tools/" + member.guild.name + " (" + str(member.guild.id) + ")/voice chat/"
-        filename = name + ".json"
+        
         now = datetime.now()
+        name = member.name + "#" + member.discriminator
+        path = utils.getGuildPath(member.guild.name, member.guild.id) + "/voice chat/"
+        filename = name + ".json"
 
         #If the user joined a channel, log the current time
         if before.channel is None:
@@ -84,7 +84,7 @@ class LoggingCog(commands.Cog):
 def log_message(message):
     sender = message.author
     name = sender.name + "#" + sender.discriminator
-    path = "./tools/" + sender.guild.name + " (" + str(sender.guild.id) + ")/text chat/"
+    path = utils.getGuildPath(message.guild.name, message.guild.id) + "/text chat/"
     filename = name + ".json"
     now = datetime.now()
 

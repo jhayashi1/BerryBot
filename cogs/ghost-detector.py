@@ -90,17 +90,21 @@ async def remove_ghost(ctx, args):
     try:
         with open(path + FILENAME, 'r') as json_file:
             replist = json.load(json_file)
+            #If the member exists in the json file, remove them
             if replist[str(member.id)]:
                 del replist[str(member.id)]
+    #If the file doesn't exist or the member doesn't exist in the file, return error message
     except (FileNotFoundError, KeyError):
         return 'User "' + username + '" not found in ghost watchlist'
 
+    #Save the updated json file
     utils.save_json(path + FILENAME, replist)
 
     return 'Removed "' + username + '" from ghost watchlist' 
 
+#Retrieve a list of all of the members on the watchlist
 def list_ghosts():
-    list_embed = discord.Embed(title="Ghost watchlist", color=discord.Color.light_gray)
+    list_embed = discord.Embed(title="Ghost Watchlist", color=discord.Color.light_gray)
 
     #Loop through replist
 
