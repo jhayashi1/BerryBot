@@ -14,10 +14,10 @@ class HelpCog(commands.Cog):
             help_embed.add_field(
                 name=command.name,
                 value=command.brief,
-                inline=False
+                inline=True
             )
 
-        utils.sendResponse(ctx, embed=help_embed)
+        await utils.sendResponse(ctx, embed=help_embed)
 
 async def setup(bot):
     await bot.add_cog(HelpCog(bot))

@@ -14,7 +14,7 @@ class AdminCog(commands.Cog):
         except:
             await ctx.send("You're not connected to a channel!")
 
-    @commands.command(brief='connect to desired user\'s voice channel')
+    @commands.command(brief='Connect to desired user\'s voice channel')
     async def join(self, ctx, *args):
         try:
             converter = commands.MemberConverter()
@@ -24,12 +24,12 @@ class AdminCog(commands.Cog):
             await ctx.send("User not in voice channel or invalid user")
 
 
-    @commands.command(brief='disconnect from voice channel')
+    @commands.command(brief='Disconnect from voice channel')
     async def disconnect(self, ctx):
         await ctx.voice_client.disconnect()
         self.voice_check = False
 
-    @commands.command()
+    @commands.command(brief="Stop the bot")
     async def close(self, ctx):
         await self.bot.close()
 

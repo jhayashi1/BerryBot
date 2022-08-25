@@ -12,7 +12,7 @@ class TriggersCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(brief="Add, remove, or list triggers for the server")
     async def trigger(self, ctx, *args):
         global path
         path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/"
