@@ -108,7 +108,7 @@ async def remove_ghost(ctx, args):
 
 #Retrieve a list of all of the members on the watchlist
 def list_ghosts():
-    list_embed = discord.Embed(title="Ghost Watchlist", color=discord.Color.light_gray)
+    list_embed = discord.Embed(title="Ghost Watchlist", color=discord.Colour.blurple())
 
     try:
         with open(path + FILENAME, 'r') as json_file:
@@ -117,8 +117,10 @@ def list_ghosts():
             for key in replist.keys():
                 #Retrieve user's name from entry and add to embed
                 name = replist[key]["name"]
+                #TODO fix this
                 list_embed.add_field(
                     name=name,
+                    value=None,
                     inline=False
                 )
 
