@@ -20,55 +20,12 @@ class MotdCog(commands.Cog):
         await utils.sendResponse(ctx, response=response)
 
     @commands.command(brief='Add role or user to subscription list')
-    async def subscribe(self, ctx, *args):
-        target = await utils.getUserByNameOrID(ctx, args)
-
-        if target is not None:
-            response = await addSubscriber(ctx, target)
-        else:
-            try:
-                #TODO Make it able to add roles to motd
-                #target = discord.utils.get(ctx.guild.roles, name=' '.join(args))
-                response = "Role added to subscription list"
-            except Exception as e:
-                print(e)
-                response = "No user or role found!"
-
-        await utils.sendResponse(ctx, response=response)
-    
-    @commands.command(brief='Remove role or user from subscription list')
-    async def unsubscribe(self, ctx, target):
-        target = await utils.getUserByNameOrID(ctx, target)
-
-        if target is not None:
-            response = await removeSubscriber(ctx, target)
-
-    @commands.command(brief='Add role or user to subscription list')
     async def say(self, ctx, args):
         await ctx.send(args)
-    
-async def addSubscriber(ctx, target):
-        path = "./servers/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/config.ini"
-
-        try:
-            channelId = utils.getConfigParam('params', 'motd')
-
-            channel = ctx.bot.get_channel(channelId)
-            await channel.set_permissions(target, read_messages=True, send_messages=False)
-        except Exception as e:
-            print(e)
-            return "Error adding user!"
-
-        return "User " + target.name + " added to subscription list"
-
-async def removeSubscriber(ctx, target):
-    path = "./servers/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/config.ini"
-    return "User " + target.name + " removed from subscription list"
-    #TODO remove subscription
 
 
 def setMotdChannel(ctx, channel):
-    path = "./servers/" + ctx.guild.name + " (" + str(ctx.guild.id) + ")/"
+    path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) 
     file = "config.ini"
 
     #Check for path and config file

@@ -15,7 +15,7 @@ class TriggersCog(commands.Cog):
     @commands.command(brief="Add, remove, or list triggers for the server")
     async def trigger(self, ctx, *args):
         global path
-        path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) + "/"
+        path = utils.getGuildPath(ctx.guild.name, ctx.guild.id) 
         #Check the args
         check = error_check(args)
         
@@ -41,7 +41,7 @@ class TriggersCog(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         global path
-        path = utils.getGuildPath(message.guild.name, message.guild.id) + "/"
+        path = utils.getGuildPath(message.guild.name, message.guild.id) 
 
         #If the user is the bot or the message is a command
         if message.author.bot or message.content[0] == ',':
