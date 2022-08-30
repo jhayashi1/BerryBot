@@ -107,7 +107,7 @@ async def add_user_to_json_list(ctx, username, path, filename):
             #If the user is already on the watchlist, return error message
             try:
                 if replist[member.id]:
-                    return "Member " + username + " already on ghost watchlist"
+                    return "Member " + username + " already on the list"
             #If the user is not on the watchlist, add them 
             except KeyError:
                 replist[member.id] = {
@@ -161,8 +161,8 @@ async def check_json_list_for_user(id, path, filename):
     return False
 
 #Retrieve a list of all of the members in a json list as an embed
-def json_list_to_embed(path, filename):
-    list_embed = discord.Embed(title="Ghost Watchlist", color=discord.Colour.blurple())
+def json_list_to_embed(title, path, filename):
+    list_embed = discord.Embed(title=title, color=discord.Colour.blurple())
 
     try:
         with open(path + filename, 'r') as json_file:

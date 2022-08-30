@@ -1,8 +1,12 @@
+from urllib import response
 import discord
 import os
 import utils
 from discord.ext import commands
 from configparser import ConfigParser
+
+path = None
+FILENAME = 'status-watchlist.json'
 
 class MotdCog(commands.Cog):
     def __init__(self, bot):
@@ -19,9 +23,41 @@ class MotdCog(commands.Cog):
         
         await utils.sendResponse(ctx, response=response)
 
-    @commands.command(brief='Add role or user to subscription list')
+    @commands.command(brief='Add user to action watchlist')
+    async def watch(self, ctx, *args):
+        global path
+        path = utils.getGuildPath(ctx.guild.name, ctx.guild.id)
+
+        username = ""
+
+        for element in args:
+            username += element
+
+        response = utils.add_user_to_json_list(ctx, username, path, FILENAME)
+
+        if not response:
+            response = 'Successfully added user "' + username + '" to action watchlist'
+
+        await utils.sendResponse(ctx, response=response)
+
+    @commands.command(brief='Repeat message after the command')
     async def say(self, ctx, args):
         await ctx.send(args)
+
+    @commands.Cog.listener()
+    async def on_presence_update(before, after):
+        #TODO get channel from config.ini
+        new_activity = after.activity
+
+        for element in new_activity:
+            if type(element) is discord.Spotify:
+                message = element.title
+
+        if message:
+            #TODO send response
+            return None
+
+        return None
 
 
 def setMotdChannel(ctx, channel):

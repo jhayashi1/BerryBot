@@ -29,7 +29,7 @@ class GhostDetectorCog(commands.Cog):
         elif extra_command == "remove":
             response = await remove_ghost(ctx, args)
         elif extra_command == "list":
-            embed = utils.json_list_to_embed(path, FILENAME)
+            embed = utils.json_list_to_embed("ghost watchlist", path, FILENAME)
         else:
             response = ERROR_MESSAGE
 
